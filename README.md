@@ -67,3 +67,132 @@ Sistema_Saida/
 │       ├── motivos.py        # Endpoints de consulta e cadastro de motivos pré-definidos
 │       └── saidas.py         # Endpoints de autorização, confirmação física e histórico
 └── app.py                    # Interface Streamlit completa (Login, Abas operacionais e Auditoria)
+```
+
+## Como Executar o Projeto Localmente
+
+Siga o passo a passo abaixo para clonar o repositório, configurar as variáveis de ambiente e rodar o backend (FastAPI) e o frontend (Streamlit) na sua máquina.
+
+### Pré-requisitos
+* `Python 3.10` ou superior instalado.
+* `Git` instalado.
+
+---
+
+### Passo 1: Clonar o Repositório
+Abra o terminal e clone o projeto:
+```bash
+git clone https://github.com/gabtapia/Sistema_Saida.git
+cd Sistema_Saida
+```
+---
+
+### Passo 2: Criar e Ativar o Ambiente Virtual
+
+Recomenda-se criar um único ambiente virtual na raiz do projeto:
+
+* No Windows (PowerShell):
+```bash
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+```
+
+(Se receber erro de permissão de scripts no PowerShell, execute antes: Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass)
+
+* No Windows (Prompt de Comando / CMD):
+```bash
+python -m venv .venv
+.venv\Scripts\activate.bat
+```
+
+* No Linux / macOS:
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+---
+
+### Passo 3: Configurar e Rodar o Backend (Terminal 1)
+
+1. Entre na pasta backend:
+```bash
+cd backend
+```
+
+3. Instale as dependências da API:
+```bash
+pip install -r requirements.txt
+```
+
+4. Crie o arquivo de variáveis de ambiente .env na pasta backend/:
+* No Windows (PowerShell):
+```bash
+Copy-Item ..\.env.example .env
+```
+
+* No Linux / macOS:
+```bash
+cp ../.env.example .env
+```
+
+**Para testes use `python -c "import secrets; print(secrets.token_hex(32))"` para criar a Secret Key**
+
+**(Caso prefira, crie manualmente o arquivo .env dentro de backend/ e cole o conteúdo do arquivo .env.example).**
+
+4. Inicie o servidor da API com Uvicorn:
+```bash
+uvicorn main:app --reload --port 8000
+```
+
+A API estará em execução em `http://127.0.0.1:8000`.
+Acesse a documentação interativa Swagger em: `http://127.0.0.1:8000/docs`.
+
+---
+
+### Passo 4: Rodar o Frontend com Streamlit (Terminal 2)
+
+Deixe o Terminal 1 aberto rodando o FastAPI. Abra um segundo terminal para executar a interface gráfica:
+
+1. Navegue até a pasta raiz do projeto:
+```bash
+cd Sistema_Saida
+```
+
+2. Ative o mesmo ambiente virtual criado no Passo 2:
+* Windows (PowerShell): `.venv\Scripts\Activate.ps1`
+* Windows (CMD): `.venv\Scripts\activate.bat`
+* Linux/macOS: `source .venv/bin/activate`
+
+3. Saida da pasta backend/:
+```bash
+cd ../
+```
+
+6. Inicie a aplicação Streamlit:
+```bash
+streamlit run app.py
+```
+
+A interface abrirá automaticamente no seu navegador padrão no endereço:
+`http://localhost:8501`
+
+---
+
+### Passo 5: Credenciais de Acesso Inicial
+
+Na inicialização da aplicação, o banco de dados SQLite (`saidas_ifpr.db`) é criado e populado automaticamente com os seguintes usuários para testes:
+
+* Administrador:
+  - E-mail: admin@ifpr.edu.br
+  - Senha: admin123
+  - Perfil: Acesso total, cadastro de novos motivos e de operadores.
+
+* Assistência Pedagógica / Alunos:
+  - E-mail: assistencia@ifpr.edu.br
+  - Senha: senha123
+  - Perfil: Emissão e registro de novas autorizações de saída.
+
+* Portaria:
+  - E-mail: portaria@ifpr.edu.br
+  - Senha: senha123
+  - Perfil: Fila de espera de alunos autorizados e confirmação de liberação física no portão.
